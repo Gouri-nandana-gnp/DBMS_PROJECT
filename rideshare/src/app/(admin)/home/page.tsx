@@ -1,20 +1,43 @@
 'use client';
 
 import React, { useState } from 'react';
-import Image from 'next/image'; // for images in Next.js
+import Image from 'next/image';
 
 const HomePage: React.FC = () => {
   const [location, setLocation] = useState('');
   const [destination, setDestination] = useState('');
 
-  // Function to handle button click and log the location and destination as an object
-  const handleSeePrices = () => {
+  // Function to handle button click, send data to the backend API
+  const handleSeePrices = async () => {
     const rideDetails = {
-      location: location,
-      destination: destination,
+      from: location,
+      to: destination,
+      send: true,
+      received: false
     };
-    console.log(rideDetails); // Log the object to the console
+    
+    console.log("Button clicked! Preparing to send data:", rideDetails);
+    
+    try {
+      const response = await fetch('/api/sendNotification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(rideDetails)
+      });
+    
+      console.log("Response status:", response.status);
+      if (response.ok) {
+        console.log('Data sent successfully');
+      } else {
+        console.error('Failed to send data', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
+  
 
   return (
     <div className="flex flex-col lg:flex-row justify-between items-center h-screen bg-black text-white p-8 lg:p-16">
@@ -28,8 +51,8 @@ const HomePage: React.FC = () => {
             list="locations"
             placeholder="Enter location"
             className="p-3 text-lg border-none rounded-md bg-gray-200 text-black"
-            value={location} // Controlled input for location
-            onChange={(e) => setLocation(e.target.value)} // Update state on input change
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
           />
           <datalist id="locations">
             <option value="Gec" />
@@ -42,8 +65,8 @@ const HomePage: React.FC = () => {
             list="destinations"
             placeholder="Enter destination"
             className="p-3 text-lg border-none rounded-md bg-gray-200 text-black"
-            value={destination} // Controlled input for destination
-            onChange={(e) => setDestination(e.target.value)} // Update state on input change
+            value={destination}
+            onChange={(e) => setDestination(e.target.value)}
           />
           <datalist id="destinations">
             <option value="Gec" />
@@ -53,9 +76,9 @@ const HomePage: React.FC = () => {
 
           <button
             className="p-3 bg-white text-black rounded-md text-lg hover:bg-gray-300"
-            onClick={handleSeePrices} // Call the function when button is clicked
+            onClick={handleSeePrices}
           >
-            See prices
+            send
           </button>
         </div>
       </div>
