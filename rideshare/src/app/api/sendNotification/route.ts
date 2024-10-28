@@ -1,45 +1,59 @@
 // src/app/api/sendNotification/route.ts
-import { NextResponse } from 'next/server';
-import { pgTable, serial, varchar, boolean } from 'drizzle-orm/pg-core';
-import { drizzle } from 'drizzle-orm/vercel-postgres';
-import { createClient } from '@vercel/postgres';
+import { NextResponse } from "next/server";
+import {
+  notificationsDb,
+  notifications_Table,
+  InsertSaveData,
+} from "@/app/db/schema/schema";
 
-// Define the schema directly here
-const notifications = pgTable('notifications', {
-  id: serial('id').primaryKey(),
-  from: varchar('from', { length: 255 }),
-  to: varchar('to', { length: 255 }),
-  send: boolean('send').default(false),
-  received: boolean('received').default(false),
-});
-
-export async function POST(req: Request) {
-  console.log("Received a POST request to /api/sendNotification");
-
+export async function POST(request: Request) {
   try {
-    const { from, to, send, received } = await req.json();
-    console.log("Request Body:", { from, to, send, received });
+    // Parse JSON data from the request
+    const notificationData: InsertSaveData = await request.json();
+    console.log("Received notification data:", notificationData);
 
-    // Initialize the database connection
-    const client = createClient();
-
-    // Check connection status
-    await client.connect(); // Add this line to establish the connection
-    console.log("Connected to database successfully");
-
-    const db = drizzle(client);
-
-    // Insert the data into the database
-    await db.insert(notifications).values({
+    // Extract data fields from the request body
+    const {
+      user = "admin",
       from,
       to,
-      send,
-      received,
-    });
+      send = false,
+      received = false,
+    } = notificationData;
 
-    return NextResponse.json({ message: 'Notification created successfully' }, { status: 200 });
+    if (!from || !to) {
+      throw new Error("Missing required fields: 'from' and 'to'");
+    }
+
+    // Insert data into the notifications table
+    const result = await notificationsDb
+      .insert(notifications_Table)
+      .values({
+        user,
+        from,
+        to,
+        send,
+        received,
+      })
+      .returning({
+        id: notifications_Table.id,
+        user: notifications_Table.user,
+        from: notifications_Table.from,
+        to: notifications_Table.to,
+        send: notifications_Table.send,
+        received: notifications_Table.received,
+      });
+
+    console.log("Insert operation result:", result);
+    return NextResponse.json(result[0], { status: 201 });
   } catch (error) {
-    console.error("Error processing request:", error);
-    return NextResponse.json({ error: 'Error creating notification' }, { status: 500 });
+    console.error("Error in POST request:", error);
+    return NextResponse.json(
+      {
+        error: "Failed to create notification",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    );
   }
 }

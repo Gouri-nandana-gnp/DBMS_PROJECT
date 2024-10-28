@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1730101678994,
-      "tag": "0000_cynical_crystal",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1730101724514,
-      "tag": "0001_cloudy_ricochet",
+      "when": 1730124672270,
+      "tag": "0000_low_shiver_man",
       "breakpoints": true
     }
   ]
