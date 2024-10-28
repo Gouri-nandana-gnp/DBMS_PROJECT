@@ -1,6 +1,9 @@
 // src/app/api/getNotifications/route.ts
 import { NextResponse } from "next/server";
-import { notificationsDb, notifications_Table } from "@/app/db/schema/schema";
+import {
+  notificationsDb,
+  notifications_Table,
+} from "@/db/schema/tables/notification";
 import { eq, lt } from "drizzle-orm";
 
 export async function GET() {

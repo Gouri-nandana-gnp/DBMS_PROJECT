@@ -1,15 +1,21 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '@/app/(admin)/navbar/page';
+import { auth } from '@/firebase/config'; // Adjust the import according to your project structure
+import { onAuthStateChanged } from 'firebase/auth';
 
 const HomePage: React.FC = () => {
   const [location, setLocation] = useState('');
   const [destination, setDestination] = useState('');
+  const [user, setUser] = useState<any>(null);
+  const [email, setEmail] = useState('');// State to hold user information
 
   // Function to handle button click, send data to the backend API
   const handleSeePrices = async () => {
     const rideDetails = {
+      user: user ? user.displayName : 'Guest', // Use the user's display name if logged in
+      email: user ? user.email : 'Guest',
       from: location,
       to: destination,
       send: true,
@@ -38,6 +44,21 @@ const HomePage: React.FC = () => {
     }
   };
 
+  // Use useEffect to listen for user authentication state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        console.log("User signed in:", currentUser);
+        setUser(currentUser); // Set the user state to the current user
+      } else {
+        console.log("No user is signed in.");
+        setUser(null); // Reset user state if no user is signed in
+      }
+    });
+
+    return () => unsubscribe(); // Clean up the subscription on unmount
+  }, []);
+
   return (
     <div className="relative flex flex-col lg:flex-row justify-between items-center h-screen overflow-hidden bg-black text-white p-8 lg:p-16">
       {/* Video Background */}
@@ -51,12 +72,12 @@ const HomePage: React.FC = () => {
         Your browser does not support the video tag.
       </video>
       <div className="absolute top-0 left-0 w-full h-full bg-black opacity-50"></div>
-      {/* Content Overlay */}
 
+      {/* Navbar Overlay */}
+      <div className='absolute top-0 left-0 w-full'><Navbar /></div>
 
-      <div className='absolute top-0 left-0 w-full'> <Navbar /></div>
+      {/* Main Content */}
       <div className="flex-1 flex flex-col gap-5 max-w-md lg:max-w-lg relative z-10">
-
         <h1 className="text-4xl lg:text-6xl font-bold">Go anywhere with RideShare</h1>
         <p className="text-xl lg:text-2xl">Request a ride, hop in, and go.</p>
 

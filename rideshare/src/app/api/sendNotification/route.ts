@@ -4,7 +4,7 @@ import {
   notificationsDb,
   notifications_Table,
   InsertSaveData,
-} from "@/app/db/schema/schema";
+} from "@/db/schema/tables/notification";
 
 export async function POST(request: Request) {
   try {
@@ -14,7 +14,8 @@ export async function POST(request: Request) {
 
     // Extract data fields from the request body
     const {
-      user = "admin",
+      user,
+      email,
       from,
       to,
       send = false,
@@ -31,6 +32,7 @@ export async function POST(request: Request) {
       .values({
         user,
         from,
+        email,
         to,
         send,
         received,
@@ -38,6 +40,7 @@ export async function POST(request: Request) {
       .returning({
         id: notifications_Table.id,
         user: notifications_Table.user,
+        email: notifications_Table.email,
         from: notifications_Table.from,
         to: notifications_Table.to,
         send: notifications_Table.send,

@@ -1,5 +1,5 @@
 {
-  "id": "66960bc1-0318-4525-854a-66087bd12778",
+  "id": "ac7ec8b2-5d4c-4932-8c04-9bd35143550d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -44,6 +44,12 @@
           "notNull": false,
           "default": "'admin'"
         },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
         "from": {
           "name": "from",
           "type": "varchar(255)",
@@ -52,6 +58,56 @@
         },
         "to": {
           "name": "to",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "send": {
+          "name": "send",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "received": {
+          "name": "received",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.messages": {
+      "name": "messages",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user": {
+          "name": "user",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'admin'"
+        },
+        "fromEmail": {
+          "name": "fromEmail",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "toEmail": {
+          "name": "toEmail",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
