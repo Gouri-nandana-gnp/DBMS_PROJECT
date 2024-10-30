@@ -53,22 +53,14 @@ const MessagesPage: React.FC = () => {
             ) : (
                 <table className="table-auto w-full text-center bg-lime-300 border border-white shadow-lg rounded-lg overflow-hidden">
                     <thead className="bg-lime-400 text-white">
-                        <tr>
-                            <th className="p-4 border-b border-gray-300">ID</th>
-                            <th className="p-4 border-b border-gray-300">From Email</th>
-                            <th className="p-4 border-b border-gray-300">To Email</th>
-                            <th className="p-4 border-b border-gray-300">Sent</th>
-                            <th className="p-4 border-b border-gray-300">Received</th>
-                        </tr>
+
                     </thead>
                     <tbody>
                         {messages.map((message) => (
                             <tr key={message.id} className="bg-black hover:bg-gray-800 transition duration-300">
-                                <td className="p-4 border-b border-gray-300">{message.id}</td>
-                                <td className="p-4 border-b border-gray-300">{message.fromEmail}</td>
-                                <td className="p-4 border-b border-gray-300">{message.toEmail}</td>
-                                <td className="p-4 border-b border-gray-300">{message.send ? 'Yes' : 'No'}</td>
-                                <td className="p-4 border-b border-gray-300">{message.received ? 'Yes' : 'No'}</td>
+
+                                <td className="p-4 border-b border-gray-300">{message.fromEmail} is accepted by {message.toEmail}</td>
+
                             </tr>
                         ))}
                     </tbody>

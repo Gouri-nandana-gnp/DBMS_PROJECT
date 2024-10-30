@@ -134,12 +134,7 @@ const TableComponent: React.FC = () => {
                   >
                     Approve
                   </button>
-                  <button
-                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-300"
-                  // Implement reject function if needed
-                  >
-                    Reject
-                  </button>
+
                 </td>
               </tr>
             ))}
