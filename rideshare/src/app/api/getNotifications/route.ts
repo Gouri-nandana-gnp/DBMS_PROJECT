@@ -4,7 +4,7 @@ import {
   notificationsDb,
   notifications_Table,
 } from "@/db/schema/tables/notification";
-import { eq, lt } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 export async function GET() {
   try {

@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { auth } from '@/firebase/config'; // Adjust the import according to your project structure
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, User } from 'firebase/auth';
+
 
 interface Notification {
   id: number;
@@ -17,9 +18,9 @@ interface Notification {
 const TableComponent: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<any>(null);
-  const [email, setEmail] = useState(''); // State to hold user information
+  const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null); // State to hold error messages
+  const [email, setEmail] = useState('');
 
   const fetchNotifications = async () => {
     try {
@@ -51,12 +52,13 @@ const TableComponent: React.FC = () => {
     }
 
     const approvalData = {
-      user: user.name || "admin", // Pass the user email or default to 'admin'
-      fromEmail: user.email, // Change this to match the expected key
-      toEmail: notification.email, // Change this to match the expected key
+      user: user.displayName || "admin", // Use displayName for the user's name
+      fromEmail: user.email, // Use the email property of the user
+      toEmail: notification.email, // Email of the notification recipient
       send: true, // Optional, can be set based on your logic
       received: false, // Optional, can be set based on your logic
     };
+
     try {
       const response = await fetch('/api/sendMessage', {
         method: 'POST',

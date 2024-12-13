@@ -3,13 +3,13 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '@/app/(admin)/navbar/page';
 import { auth } from '@/firebase/config'; // Adjust the import according to your project structure
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, User } from 'firebase/auth';
 
 const HomePage: React.FC = () => {
   const [location, setLocation] = useState('');
   const [destination, setDestination] = useState('');
-  const [user, setUser] = useState<any>(null);
-  const [email, setEmail] = useState('');// State to hold user information
+  const [user, setUser] = useState<User | null>(null);
+
 
   // Function to handle button click, send data to the backend API
   const handleSeePrices = async () => {

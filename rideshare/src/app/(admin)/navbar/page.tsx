@@ -1,12 +1,14 @@
+"use client";
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { auth } from '@/firebase/config'; // Import your firebase config
-import { onAuthStateChanged } from 'firebase/auth'; // Import Firebase method for auth state
+import { onAuthStateChanged, User } from 'firebase/auth'; // Import Firebase method for auth state
 
 const Navbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [user, setUser] = useState<any>(null); // State to store user data
+    const [user, setUser] = useState<User | null>(null); // State to store user data
     const router = useRouter();
 
     const toggleMenu = () => {
@@ -50,7 +52,7 @@ const Navbar: React.FC = () => {
                     <div className="flex items-center ml-auto"> {/* Use ml-auto to push the button to the right */}
                         {user ? (
                             <div className="flex items-center">
-                                <img
+                                <Image
                                     src={user.photoURL || '/default-avatar.png'} // Fallback to a default image if no photo
                                     alt={user.displayName || "User"}
                                     className="w-8 h-8 rounded-full mr-2" // Style the image
