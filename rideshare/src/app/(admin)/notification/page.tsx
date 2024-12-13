@@ -20,7 +20,6 @@ const TableComponent: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null); // State to hold error messages
-  const [email, setEmail] = useState('');
 
   const fetchNotifications = async () => {
     try {
@@ -31,10 +30,10 @@ const TableComponent: React.FC = () => {
       const data = await response.json();
 
       if (data.notifications) {
-        setNotifications(data.notifications);  // Access notifications array
+        setNotifications(data.notifications); // Access notifications array
       } else {
         console.error("Unexpected data format:", data);
-        setNotifications([]);  // Set to empty array to handle "No data" state
+        setNotifications([]); // Set to empty array to handle "No data" state
       }
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -52,13 +51,12 @@ const TableComponent: React.FC = () => {
     }
 
     const approvalData = {
-      user: user.displayName || "admin", // Use displayName for the user's name
-      fromEmail: user.email, // Use the email property of the user
-      toEmail: notification.email, // Email of the notification recipient
-      send: true, // Optional, can be set based on your logic
-      received: false, // Optional, can be set based on your logic
+      user: user.displayName || "admin",
+      fromEmail: user.email,
+      toEmail: notification.email,
+      send: true,
+      received: false,
     };
-
     try {
       const response = await fetch('/api/sendMessage', {
         method: 'POST',
@@ -95,10 +93,8 @@ const TableComponent: React.FC = () => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
-        setEmail(currentUser.email || ''); // Ensure email is set
       } else {
         setUser(null);
-        setEmail('');
       }
     });
 
@@ -136,7 +132,6 @@ const TableComponent: React.FC = () => {
                   >
                     Approve
                   </button>
-
                 </td>
               </tr>
             ))}
@@ -148,3 +143,4 @@ const TableComponent: React.FC = () => {
 };
 
 export default TableComponent;
+
